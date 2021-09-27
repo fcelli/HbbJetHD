@@ -7,19 +7,28 @@ int main(int argc, char **argv){
     
     // Parse arguments
     ArgParser arg_parser(argc, argv);
-    TString ifile_name  = arg_parser.get_inputfile();
-    TString ofile_name  = arg_parser.get_outputfile();
-    TString ws_name     = arg_parser.get_workspace();
-    TString snap_name   = arg_parser.get_snapshot();
-    TString region      = arg_parser.get_region();
-    TString observable  = arg_parser.get_observable();
+    TString ifileName  = arg_parser.get_inputfile();
+    TString ofileName  = arg_parser.get_outputfile();
+    TString wsName     = arg_parser.get_workspace();
+    TString snapName   = arg_parser.get_snapshot();
+    TString region     = arg_parser.get_region();
+    TString obsName    = arg_parser.get_observable();
 
     // Open input file
-    TFile *ifile = TFile::Open(ifile_name.Data(), "READ");
+    TFile *ifile = TFile::Open(ifileName.Data(), "READ");
 
     // Extract RooWorkspace and post-fit snapshot
-    RooWorkspace *ws = (RooWorkspace*)ifile->Get(ws_name.Data());
-    ws->getSnapshot(snap_name.Data());
+    RooWorkspace *ws = (RooWorkspace*)ifile->Get(wsName.Data());
+    ws->getSnapshot(snapName.Data());
 
-    HistDumper hd(*ws);
+    // Dump histograms
+    HistDumper hist_dumper(*ws, region, obsName);
+
+    // Write histograms to file
+    TFile *ofile = new TFile(ofileName, "RECREATE");
+    for(TH1F *h : hist_dumper.get_histos()){
+        h->Write();
+    }
+    ofile->Close();
+    delete ofile;
 }
