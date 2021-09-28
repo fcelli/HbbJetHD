@@ -2,8 +2,17 @@
 
 HistDumper::HistDumper(const RooWorkspace &ws, const TString &region, const TString &obsName){
     
-    // Loop over pdfs
-    RooArgSet all_pdfs = (RooArgSet)ws.allPdfs();
+    // Extract data histogram
+    RooDataSet* dataset = dynamic_cast<RooDataSet*>(ws.data("combData"));
+    m_hdata = (TH1F*)dataset->createHistogram(obsName);
+    m_hdata->Sumw2();
+    // Enforce Gaussian errors on data points
+    for(int ibin = 1; ibin <= m_hdata->GetNbinsX(); ibin ++){
+        m_hdata->SetBinError(ibin, sqrt(m_hdata->GetBinContent(ibin)));
+    }
+
+    // Extract MC histograms
+    RooArgSet all_pdfs  = (RooArgSet)ws.allPdfs();
     TIterator *pdf_iter = all_pdfs.createIterator();
     RooAbsPdf *pdfi;
 	while(pdfi=(RooAbsPdf*)pdf_iter->Next()){

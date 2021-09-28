@@ -29,6 +29,8 @@ int main(int argc, char **argv){
     for(TH1F *h : hist_dumper.get_histos()){
         h->Write();
     }
+    hist_dumper.GetData()->Write();
+
     ofile->Close();
     delete ofile;
 }
