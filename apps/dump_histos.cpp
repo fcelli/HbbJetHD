@@ -7,12 +7,12 @@ int main(int argc, char **argv){
     
     // Parse arguments
     ArgParser arg_parser(argc, argv);
-    TString ifileName  = arg_parser.get_inputfile();
-    TString ofileName  = arg_parser.get_outputfile();
-    TString wsName     = arg_parser.get_workspace();
-    TString snapName   = arg_parser.get_snapshot();
-    TString region     = arg_parser.get_region();
-    TString obsName    = arg_parser.get_observable();
+    TString ifileName  = arg_parser.ifileName;
+    TString ofileName  = arg_parser.ofileName;
+    TString wsName     = arg_parser.wsName;
+    TString snapName   = arg_parser.snapName;
+    TString region     = arg_parser.regName;
+    TString obsName    = arg_parser.obsName;
 
     // Open input file
     TFile *ifile = TFile::Open(ifileName.Data(), "READ");
