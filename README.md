@@ -1,2 +1,2 @@
-# HbbJetBH
-Hbb+Jet Bump Hunter
+# HbbJetHD
+Hbb+Jet Histogram Dumper
