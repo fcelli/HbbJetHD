@@ -55,4 +55,9 @@ HistDumper::HistDumper(const RooWorkspace &ws, const TString &region, const TStr
         m_histos.push_back(h);
     }
     delete pdf_iter;
+
+    m_hMC = m_histos[0];
+    for(int i=1; i<m_histos.size(); ++i) {
+        m_hMC->Add(m_histos[i]);
+    }
 }

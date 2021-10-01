@@ -1,7 +1,7 @@
 #include <iostream>
 #include "TFile.h"
-#include "HistDumper/HistDumper.h"
-#include "ArgParser.h"
+#include "HbbJetHD/HistDumper.h"
+#include "HbbJetHD/ArgParser.h"
 
 int main(int argc, char **argv){
     
@@ -26,10 +26,9 @@ int main(int argc, char **argv){
 
     // Write histograms to file
     TFile *ofile = new TFile(ofileName, "RECREATE");
-    for(TH1F *h : hist_dumper.get_histos()){
-        h->Write();
-    }
-    hist_dumper.GetData()->Write();
+    
+    hist_dumper.GetData()->Write("hdata");
+    hist_dumper.GetMC()->Write("hMC");
 
     ofile->Close();
     delete ofile;
