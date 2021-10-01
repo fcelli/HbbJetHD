@@ -1,3 +1,0 @@
-[submodule "extern/BumpHunter"]
-	path = extern/BumpHunter
-	url = ssh://git@gitlab.cern.ch:7999/fcelli/BumpHunter.git
