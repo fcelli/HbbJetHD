@@ -11,18 +11,14 @@ int main(int argc, char **argv){
     TString ofileName  = arg_parser.ofileName;
     TString wsName     = arg_parser.wsName;
     TString snapName   = arg_parser.snapName;
-    TString region     = arg_parser.regName;
+    TString regName    = arg_parser.regName;
     TString obsName    = arg_parser.obsName;
 
     // Open input file
     TFile *ifile = TFile::Open(ifileName.Data(), "READ");
 
-    // Extract RooWorkspace and post-fit snapshot
-    RooWorkspace *ws = (RooWorkspace*)ifile->Get(wsName.Data());
-    ws->getSnapshot(snapName.Data());
-
     // Dump histograms
-    HistDumper hist_dumper(*ws, region, obsName);
+    HistDumper hist_dumper(ifile, wsName, snapName, regName, obsName);
 
     // Write histograms to file
     TFile *ofile = new TFile(ofileName, "RECREATE");
@@ -31,5 +27,5 @@ int main(int argc, char **argv){
     hist_dumper.GetMC()->Write("hMC");
 
     ofile->Close();
-    delete ofile;
+    delete ifile, ofile;
 }
