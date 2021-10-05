@@ -23,8 +23,8 @@ int main(int argc, char **argv){
     // Write histograms to file
     TFile *ofile = new TFile(ofileName, "RECREATE");
     
-    hist_dumper.GetData()->Write("hdata");
-    hist_dumper.GetMC()->Write("hMC");
+    hist_dumper.getData()->Write("hdata");
+    hist_dumper.getMC()->Write("hMC");
 
     ofile->Close();
     delete ifile, ofile;
