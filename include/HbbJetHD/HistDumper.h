@@ -14,6 +14,10 @@
 #include "RooAbsPdf.h"
 #include "RooDataSet.h"
 #include "RooFitResult.h"
+#include "RooSimultaneous.h"
+
+// RooStats
+#include "RooStats/ModelConfig.h"
 
 typedef std::map<TString, std::map<TString, double>> CorrMatrix;
 

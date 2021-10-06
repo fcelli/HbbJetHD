@@ -21,7 +21,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-find_package(ROOT REQUIRED COMPONENTS RooFit RooFitCore)
+find_package(ROOT REQUIRED COMPONENTS RooFit RooFitCore RooStats)
 include(${ROOT_USE_FILE})
 
 add_subdirectory(apps)

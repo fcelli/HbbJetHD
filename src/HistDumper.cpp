@@ -2,13 +2,13 @@
 
 HistDumper::HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &regName, const TString &obsName){
     
-    // Extract RooWorkspace and post-fit snapshot
+    // Extract RooWorkspace and load post-fit snapshot
     m_ws = (RooWorkspace*)ifile->Get(wsName.Data());
     if(m_ws == NULL){
         std::cerr << "ERROR: no workspace with name " << wsName << " found in input file." << std::endl;
         exit(1);
     }
-    m_ws->getSnapshot(snapName.Data());
+    m_ws->loadSnapshot(snapName.Data());
 
     // Extract dataset and data histogram
     TString datasetName = "combData";
@@ -17,11 +17,21 @@ HistDumper::HistDumper(TFile *ifile, const TString &wsName, const TString &snapN
         std::cerr << "ERROR: no dataset with name " << datasetName << " found in input file." << std::endl;
         exit(1);
     }
-    m_hdata = (TH1F*)m_data->createHistogram(obsName);
-    m_hdata->Sumw2();
-    // Enforce Gaussian errors on data points
-    for(int ibin = 1; ibin <= m_hdata->GetNbinsX(); ibin ++){
-        m_hdata->SetBinError(ibin, sqrt(m_hdata->GetBinContent(ibin)));
+    RooStats::ModelConfig *_mConfig = (RooStats::ModelConfig*)m_ws->obj("ModelConfig");
+    RooSimultaneous *m_pdf = dynamic_cast<RooSimultaneous*>(_mConfig->GetPdf());
+    RooAbsCategoryLValue* m_cat = const_cast<RooAbsCategoryLValue*>(&m_pdf->indexCat());
+    int numChannels = m_cat->numBins(0);
+    TList *m_dataList = m_data->split( *m_cat, true );
+    for(int i=0; i < numChannels; i++){
+        m_cat->setBin(i);
+        RooDataSet* datai = ( RooDataSet* )m_dataList->At(i);
+        if (!((TString)datai->GetName()).Contains(regName)) continue;
+        m_hdata = (TH1F*)datai->createHistogram(obsName);
+        m_hdata->Sumw2();
+        // Enforce Gaussian errors on data points
+        for(int ibin=1; ibin <= m_hdata->GetNbinsX(); ibin ++){
+            m_hdata->SetBinError(ibin, sqrt(m_hdata->GetBinContent(ibin)));
+        }
     }
 
     // Extract fit result
