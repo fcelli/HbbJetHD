@@ -23,18 +23,26 @@ typedef std::map<TString, std::map<TString, double>> CorrMatrix;
 
 class HistDumper {
     public:
-        HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &region, const TString &obsName);
-        std::vector<TH1F*> getHistos() const {return m_histos;}
+        HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &regName, const TString &obsName, bool doNPs = true);
+        std::map<TString, TH1F*> getHistos() const {return m_histos;}
         TH1F* getData() const {return m_hdata;}
         TH1F* getMC() const {return m_hMC;}
     private:
+        const TString m_wsName;
+        const TString m_snapName;
+        const TString m_regName;
+        const TString m_obsName;
+        const std::vector<TString> m_bkg_procs;
+        const bool m_doNPs;
         RooWorkspace *m_ws;
         RooDataSet *m_data;
         RooFitResult *m_fitResult;
         RooRealVar *m_yield_QCD;
         std::vector<RooRealVar*> m_pars, m_pars_QCD;
-        std::vector<TH1F*> m_histos;
-        TH1F *m_hdata, *m_hMC, *m_hQCD, *m_httbar, *m_hZboson;
+        std::map<TString, TH1F*> m_histos;
+        std::map<TString, RooAbsPdf*> m_pdfs;
+        std::map<TString, RooRealVar*> m_yields;
+        TH1F *m_hdata, *m_hMC;
         CorrMatrix m_corr, m_corr_QCD;
         CorrMatrix makeCorrMatrix(std::vector<RooRealVar*>);
         TGraphAsymmErrors* errorBandMC();
