@@ -7,10 +7,12 @@ project(HbbJetHD
 add_library(${PROJECT_NAME} SHARED
     src/HistDumper.cpp
     src/ArgParser.cpp
+    src/ConfigReader.cpp
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    PUBLIC_HEADER include/HistDumper/HistDumper.h
-    PUBLIC_HEADER include/HistDumper/ArgParser.h
+    PUBLIC_HEADER include/${PROJECT_NAME}/HistDumper.h
+    PUBLIC_HEADER include/${PROJECT_NAME}/ArgParser.h
+    PUBLIC_HEADER include/${PROJECT_NAME}/ConfigReader.h
 )
 target_include_directories(${PROJECT_NAME} PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>

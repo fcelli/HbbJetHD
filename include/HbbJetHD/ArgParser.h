@@ -9,10 +9,7 @@ struct ArgParser {
     void usage() const;
     TString ifileName;
     TString ofileName;
-    TString wsName;
-    TString snapName;
-    TString regName;
-    TString obsName;
+    TString cfgName;
 };
 
 #endif

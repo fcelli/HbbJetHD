@@ -1,6 +1,6 @@
 #include "HistDumper.h"
 
-HistDumper::HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &regName, const TString &obsName, bool doNPs) : m_wsName(wsName), m_snapName(snapName), m_regName(regName), m_obsName(obsName), m_bkg_procs({"QCD", "ttbar", "Zboson", "Wboson", "singletop"}), m_doNPs(doNPs) {
+HistDumper::HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &regName, const TString &obsName, const TString &dataName, const TString &resName, const bool doNPs, const std::vector<TString> &bkgProcs) : m_wsName(wsName), m_snapName(snapName), m_regName(regName), m_obsName(obsName), m_dataName(dataName), m_resName(resName), m_doNPs(doNPs), m_bkg_procs(bkgProcs) {
     
     // Prevent ROOT from saving histograms into internal registry
     TH1::AddDirectory(false);
@@ -14,10 +14,9 @@ HistDumper::HistDumper(TFile *ifile, const TString &wsName, const TString &snapN
     m_ws->loadSnapshot(m_snapName.Data());
 
     // Extract dataset and data histogram
-    TString datasetName = "combData";
-    m_data = dynamic_cast<RooDataSet*>(m_ws->data(datasetName.Data()));
+    m_data = dynamic_cast<RooDataSet*>(m_ws->data(m_dataName.Data()));
     if (m_data == NULL) {
-        std::cerr << "ERROR: no dataset with name " << datasetName << " found in input file." << std::endl;
+        std::cerr << "ERROR: no dataset with name " << m_dataName << " found in input file." << std::endl;
         exit(1);
     }
     RooStats::ModelConfig *_mConfig = (RooStats::ModelConfig*)m_ws->obj("ModelConfig");
@@ -38,10 +37,9 @@ HistDumper::HistDumper(TFile *ifile, const TString &wsName, const TString &snapN
     }
 
     // Extract fit result
-    TString fitResultName = "fitResult";
-    m_fitResult = (RooFitResult*)ifile->Get(fitResultName.Data());
+    m_fitResult = (RooFitResult*)ifile->Get(m_resName.Data());
     if (m_fitResult == NULL) {
-        std::cerr << "ERROR: no fit result with name " << fitResultName << " found in input file." << std::endl;
+        std::cerr << "ERROR: no fit result with name " << m_resName << " found in input file." << std::endl;
         exit(1);
     }
 

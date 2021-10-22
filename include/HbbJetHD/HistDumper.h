@@ -23,7 +23,7 @@ typedef std::map<TString, std::map<TString, double>> CorrMatrix;
 
 class HistDumper {
     public:
-        HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &regName, const TString &obsName, bool doNPs = true);
+        HistDumper(TFile *ifile, const TString &wsName, const TString &snapName, const TString &regName, const TString &obsName, const TString &dataName, const TString &resName, const bool doNPs = true, const std::vector<TString> &bkgProcs = {"QCD", "ttbar", "Zboson", "Wboson", "singletop"});
         std::map<TString, TH1F*> getHistos() const {return m_histos;}
         TH1F* getData() const {return m_hdata;}
         TH1F* getMC() const {return m_hMC;}
@@ -32,6 +32,8 @@ class HistDumper {
         const TString m_snapName;
         const TString m_regName;
         const TString m_obsName;
+        const TString m_dataName;
+        const TString m_resName;
         const std::vector<TString> m_bkg_procs;
         const bool m_doNPs;
         RooWorkspace *m_ws;
